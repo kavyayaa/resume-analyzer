@@ -2,9 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resume Analyzer</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 </head>
+
 <!-- About Modal -->
 <div id="aboutModal" class="modal">
     <div class="modal-content">
@@ -15,72 +18,140 @@
             calculates eligibility percentage for different job roles
             using rule-based matching logic.
         </p>
+        <p style="margin-top:10px;font-size:13px;color:#555">Stack: Flask · pdfplumber · Chart.js · Vanilla JS</p>
     </div>
 </div>
 
 <body>
 
-
     <!-- ========== HEADER ========== -->
     <header class="header">
         <div class="logo">Resume Analyzer</div>
         <nav class="nav">
-<a href="#" id="aboutBtn">About Me</a>
-<a href="#howItWorks">How it works</a>
+            <a href="#" id="aboutBtn">About Me</a>
+            <a href="#howItWorks">How it works</a>
             <a href="#">GitHub</a>
         </nav>
     </header>
 
     <!-- ========== HERO SECTION ========== -->
-     
-</div>
     <section class="hero">
 
-    <div class="hero-left">
-         <img src="penguin.png" alt="Penguin" class="penguin-img">
-        <h1>Analyze Your Resume Instantly</h1>
-        <p>Upload your resume and extract skills using NLP</p>
+        <div class="hero-left">
+            <img src="penguin.png" alt="Penguin" class="penguin-img">
+            <h1>Analyze Your Resume Instantly</h1>
+            <p>Upload your resume and extract skills using NLP</p>
 
-        <div class="upload-box">
-            <input type="file" id="resumeFile" accept=".pdf">
-            <button type="button" id="analyzeBtn">Analyze Resume</button>
+            <div class="upload-box">
+                <input type="file" id="resumeFile" accept=".pdf">
+
+                <!-- Role Dropdown -->
+                <div class="role-select-wrap">
+                    <label for="roleSelect">Target Role (optional)</label>
+                    <select id="roleSelect">
+                        <option value="">— Any role —</option>
+                        <option value="Frontend Developer">Frontend Developer</option>
+                        <option value="Backend Developer">Backend Developer</option>
+                        <option value="Full Stack Developer">Full Stack Developer</option>
+                        <option value="ML Engineer">ML / AI Engineer</option>
+                        <option value="Data Analyst">Data Analyst</option>
+                        <option value="DevOps Engineer">DevOps Engineer</option>
+                        <option value="Software Engineer">Software Engineer</option>
+                        <option value="Android Developer">Android Developer</option>
+                        <option value="Cloud Engineer">Cloud Engineer</option>
+                    </select>
+                </div>
+
+                <button type="button" id="analyzeBtn">
+                    Analyze Resume <span id="btnLoader" class="loader hidden"></span>
+                </button>
+            </div>
         </div>
-    </div>
 
-    <div class="hero-right">
-    <div class="illustration">
-        <img src="hero.png.jpeg" alt="AI Resume Analyzer Illustration">
-    </div>
-</div>
+        <div class="hero-right">
+            <div class="illustration">
+                <img src="hero.png.jpeg" alt="AI Resume Analyzer Illustration">
+            </div>
+        </div>
 
-
-</section>
+    </section>
 
 
     <!-- ========== RESULT SECTION (hidden initially) ========== -->
     <section class="results" id="resultsSection">
-       
 
-        <div class="result-card">
-            <h3>Matched Skills</h3>
-            <ul id="skillsList">
-                <!-- skills dynamically added -->
-            </ul>
-            <div class="result-card">
-    <h3>Suggested Job Roles</h3>
-    <ul id="jobRolesList">
-        <!-- roles dynamically added -->
-    </ul>
-    <div id="scoreFeedback"></div>
+        <!-- Card 1: Score Breakdown -->
+        <div class="result-card" style="flex:2; min-width:320px;">
+            <h3>Resume Score Breakdown</h3>
+            <div class="breakdown-row">
 
-</div>
+                <div class="bd-card">
+                    <div class="bd-card-title">⚙️ Technical Skills</div>
+                    <div class="bd-card-max">max 50 pts</div>
+                    <div class="bd-score-num" id="techNum">0</div>
+                    <div class="bd-bar-track"><div class="bd-bar-fill" id="techBar"></div></div>
+                    <div class="bd-kw" id="techKw">0 keywords found</div>
+                </div>
 
+                <div class="bd-card">
+                    <div class="bd-card-title">💼 Experience</div>
+                    <div class="bd-card-max">max 30 pts</div>
+                    <div class="bd-score-num" id="expNum">0</div>
+                    <div class="bd-bar-track"><div class="bd-bar-fill" id="expBar"></div></div>
+                    <div class="bd-kw" id="expKw">0 keywords found</div>
+                </div>
+
+                <div class="bd-card">
+                    <div class="bd-card-title">🎓 Education</div>
+                    <div class="bd-card-max">max 20 pts</div>
+                    <div class="bd-score-num" id="eduNum">0</div>
+                    <div class="bd-bar-track"><div class="bd-bar-fill" id="eduBar"></div></div>
+                    <div class="bd-kw" id="eduKw">0 keywords found</div>
+                </div>
+
+            </div>
+
+            <div class="total-inline">
+                <span>Total Score:</span>
+                <span class="big" id="totalNum">0</span>
+                <span>/ 100</span>
+                <span id="totalMsg"></span>
+            </div>
+
+            <div id="scoreFeedback"></div>
         </div>
+
+        <!-- Card 2: Matched Skills -->
+        <div class="result-card" style="flex:1; min-width:220px;">
+            <h3>Matched Skills</h3>
+            <div class="skills-cloud" id="skillsList"></div>
+        </div>
+
+        <!-- Card 3: Suggested Job Roles -->
+        <div class="result-card" style="flex:1; min-width:220px;">
+            <h3>Suggested Job Roles</h3>
+            <ul id="jobRolesList"></ul>
+        </div>
+
+        <!-- Card 4: Chart -->
+        <div class="result-card" style="flex:2; min-width:320px;">
+            <h3>Role Match Chart</h3>
+            <div style="position:relative; height:300px;">
+                <canvas id="rolesChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Card 5: Suggestions -->
+        <div class="result-card" style="flex:2; min-width:320px;">
+            <h3>💡 Suggestions to Improve</h3>
+            <div class="sug-list" id="sugList"></div>
+        </div>
+
     </section>
+
 
     <!-- ========== HOW IT WORKS ========== -->
     <section class="how-it-works" id="howItWorks">
-
         <div class="step">
             <h4>1. Upload Resume</h4>
             <p>Select your PDF resume</p>
@@ -97,8 +168,8 @@
 
     <!-- ========== FOOTER ========== -->
     <footer class="footer">
-        <p>Built with Flask, NLP & PDF Processing</p>
-        <p> Kavya Dixit</p>
+        <p>Built with Flask, NLP &amp; PDF Processing</p>
+        <p>Kavya Dixit</p>
     </footer>
 
     <script src="script.js"></script>
