@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Resume Analyzer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<!-- About Modal -->
+<div id="aboutModal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" id="closeModal">&times;</span>
+        <h2>About This Project</h2>
+        <p>
+            This AI Resume Analyzer extracts skills from resumes and
+            calculates eligibility percentage for different job roles
+            using rule-based matching logic.
+        </p>
+    </div>
+</div>
+
+<body>
+
+
+    <!-- ========== HEADER ========== -->
+    <header class="header">
+        <div class="logo">Resume Analyzer</div>
+        <nav class="nav">
+<a href="#" id="aboutBtn">About Me</a>
+<a href="#howItWorks">How it works</a>
+            <a href="#">GitHub</a>
+        </nav>
+    </header>
+
+    <!-- ========== HERO SECTION ========== -->
+     
+</div>
+    <section class="hero">
+
+    <div class="hero-left">
+         <img src="penguin.png" alt="Penguin" class="penguin-img">
+        <h1>Analyze Your Resume Instantly</h1>
+        <p>Upload your resume and extract skills using NLP</p>
+
+        <div class="upload-box">
+            <input type="file" id="resumeFile" accept=".pdf">
+            <button type="button" id="analyzeBtn">Analyze Resume</button>
+        </div>
+    </div>
+
+    <div class="hero-right">
+    <div class="illustration">
+        <img src="hero.png.jpeg" alt="AI Resume Analyzer Illustration">
+    </div>
+</div>
+
+
+</section>
+
+
+    <!-- ========== RESULT SECTION (hidden initially) ========== -->
+    <section class="results" id="resultsSection">
+       
+
+        <div class="result-card">
+            <h3>Matched Skills</h3>
+            <ul id="skillsList">
+                <!-- skills dynamically added -->
+            </ul>
+            <div class="result-card">
+    <h3>Suggested Job Roles</h3>
+    <ul id="jobRolesList">
+        <!-- roles dynamically added -->
+    </ul>
+    <div id="scoreFeedback"></div>
+
+</div>
+
+        </div>
+    </section>
+
+    <!-- ========== HOW IT WORKS ========== -->
+    <section class="how-it-works" id="howItWorks">
+
+        <div class="step">
+            <h4>1. Upload Resume</h4>
+            <p>Select your PDF resume</p>
+        </div>
+        <div class="step">
+            <h4>2. NLP Processing</h4>
+            <p>Text is extracted and processed</p>
+        </div>
+        <div class="step">
+            <h4>3. Skill Matching</h4>
+            <p>Relevant skills are identified</p>
+        </div>
+    </section>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="footer">
+        <p>Built with Flask, NLP & PDF Processing</p>
+        <p> Kavya Dixit</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
